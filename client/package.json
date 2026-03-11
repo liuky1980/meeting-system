@@ -4,8 +4,8 @@
   "description": "WebRTC meeting client",
   "type": "module",
   "scripts": {
-    "start": "npx serve public -p 8080",
-    "dev": "npx serve public -p 8080"
+    "start": "npx serve public -l tcp://0.0.0.0:8080",
+    "dev": "npx serve public -l tcp://0.0.0.0:8080"
   },
   "dependencies": {
     "serve": "^14.2.1"
