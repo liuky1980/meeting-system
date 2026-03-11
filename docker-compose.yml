@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # 信令服务器
+  signaling:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: meeting-signaling
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - CLIENT_URL=http://localhost:8080
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - meeting-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 前端客户端
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: meeting-client
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      signaling:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - meeting-network
+
+  # 可选：飞书机器人集成服务
+  feishu-bot:
+    build:
+      context: ./feishu-bot
+      dockerfile: Dockerfile
+    container_name: meeting-feishu-bot
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - FEISHU_APP_ID=${FEISHU_APP_ID:-}
+      - FEISHU_APP_SECRET=${FEISHU_APP_SECRET:-}
+      - SIGNALLING_URL=http://signaling:3000
+    restart: unless-stopped
+    networks:
+      - meeting-network
+    profiles:
+      - feishu
+
+networks:
+  meeting-network:
+    driver: bridge
+
+volumes:
+  node_modules:

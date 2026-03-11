@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>在线会议系统</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app">
+    <!-- 登录界面 -->
+    <div id="login-screen" class="screen active">
+      <div class="login-container">
+        <h1>🎥 在线会议</h1>
+        <div class="form-group">
+          <label for="username">您的姓名</label>
+          <input type="text" id="username" placeholder="请输入姓名" maxlength="20">
+        </div>
+        <div class="form-group">
+          <label for="room-id">会议 ID</label>
+          <input type="text" id="room-id" placeholder="输入或生成会议 ID" maxlength="20">
+          <button id="generate-room" class="secondary">生成随机 ID</button>
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="enable-video" checked>
+            启用摄像头
+          </label>
+          <label>
+            <input type="checkbox" id="enable-audio" checked>
+            启用麦克风
+          </label>
+        </div>
+        <button id="join-btn" class="primary">加入会议</button>
+      </div>
+    </div>
+
+    <!-- 会议界面 -->
+    <div id="meeting-screen" class="screen">
+      <header class="meeting-header">
+        <div class="room-info">
+          <h2>会议：<span id="current-room-id"></span></h2>
+          <span id="participant-count">0 人在线</span>
+        </div>
+        <div class="meeting-time" id="meeting-time">00:00</div>
+      </header>
+
+      <main class="meeting-main">
+        <div class="video-grid" id="video-grid">
+          <!-- 本地视频 -->
+          <div class="video-container local">
+            <video id="local-video" autoplay muted playsinline></video>
+            <div class="video-label">
+              <span id="local-name">我</span>
+              <div class="media-status" id="local-media-status">
+                <span class="icon mic" title="麦克风">🎤</span>
+                <span class="icon cam" title="摄像头">📷</span>
+              </div>
+            </div>
+          </div>
+          <!-- 远程视频将动态添加 -->
+        </div>
+
+        <aside class="sidebar">
+          <div class="tabs">
+            <button class="tab active" data-tab="participants">参与者</button>
+            <button class="tab" data-tab="chat">聊天</button>
+          </div>
+
+          <div class="tab-content active" id="participants-panel">
+            <div class="participant-list" id="participant-list"></div>
+          </div>
+
+          <div class="tab-content" id="chat-panel">
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input">
+              <input type="text" id="chat-input" placeholder="输入消息..." maxlength="500">
+              <button id="send-chat">发送</button>
+            </div>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="meeting-controls">
+        <button id="toggle-audio" class="control-btn" title="静音/取消静音">
+          <span class="icon">🎤</span>
+          <span class="label">静音</span>
+        </button>
+        <button id="toggle-video" class="control-btn" title="开启/关闭摄像头">
+          <span class="icon">📷</span>
+          <span class="label">关视频</span>
+        </button>
+        <button id="share-screen" class="control-btn" title="共享屏幕">
+          <span class="icon">🖥️</span>
+          <span class="label">共享</span>
+        </button>
+        <button id="leave-meeting" class="control-btn danger" title="离开会议">
+          <span class="icon">📞</span>
+          <span class="label">离开</span>
+        </button>
+      </footer>
+    </div>
+
+    <!-- 等待界面 -->
+    <div id="waiting-screen" class="screen">
+      <div class="waiting-container">
+        <div class="spinner"></div>
+        <p>正在连接会议...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
