@@ -1,0 +1,16 @@
+{
+  "name": "meeting-openclaw-integration",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "OpenClaw 会议集成模块 - 混合模式（飞书 + WebSocket）",
+  "main": "index.js",
+  "scripts": {
+    "start": "node marvin-bot.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.7.0",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.0"
+  }
+}
